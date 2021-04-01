@@ -8,6 +8,7 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
+import org.apache.flink.streaming.api.windowing.assigners.SlidingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -36,6 +37,7 @@ public class AggregationFunctionDemo {
 				while (flag) {
 					Tuple2<Long, String> row = new Tuple2<Long, String>(1L, "b");
 					ctx.collect(row);
+					Thread.sleep(100);
 				}
 
 			}
@@ -52,7 +54,8 @@ public class AggregationFunctionDemo {
 				return rowData._2;
 			}
 		})
-				.window(TumblingProcessingTimeWindows.of(Time.milliseconds(5)))
+				.window(SlidingProcessingTimeWindows.of(Time.seconds(6), Time.seconds(2)))
+//				.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
 //				.timeWindow(Time.seconds(2))
 				.aggregate(new AggregateFunction<Tuple2<Long, String>, Long, Long>() {
 
