@@ -8,6 +8,8 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingProcessingTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import scala.Tuple2;
 
@@ -49,7 +51,9 @@ public class AggregationFunctionDemo {
 			public String getKey(Tuple2<Long, String> rowData) throws Exception {
 				return rowData._2;
 			}
-		}).timeWindow(Time.seconds(2))
+		})
+				.window(TumblingProcessingTimeWindows.of(Time.seconds(2)))
+//				.timeWindow(Time.seconds(2))
 				.aggregate(new AggregateFunction<Tuple2<Long, String>, Long, Long>() {
 
 					@Override
