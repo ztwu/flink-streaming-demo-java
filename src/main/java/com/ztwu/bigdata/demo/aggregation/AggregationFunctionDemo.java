@@ -48,12 +48,14 @@ public class AggregationFunctionDemo {
 			}
 		});
 
-		inputStream.keyBy(new KeySelector<Tuple2<Long, String>, String>() {
-			@Override
-			public String getKey(Tuple2<Long, String> rowData) throws Exception {
-				return rowData._2;
-			}
-		})
+		inputStream
+				.keyBy((KeySelector<Tuple2<Long, String>, String>) value -> value._2)
+//				.keyBy(new KeySelector<Tuple2<Long, String>, String>() {
+//			@Override
+//			public String getKey(Tuple2<Long, String> rowData) throws Exception {
+//				return rowData._2;
+//			}
+//		})
 				.window(SlidingProcessingTimeWindows.of(Time.seconds(6), Time.seconds(2)))
 //				.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
 //				.timeWindow(Time.seconds(2))
