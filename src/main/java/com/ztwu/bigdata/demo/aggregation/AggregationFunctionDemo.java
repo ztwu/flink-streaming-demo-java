@@ -52,7 +52,7 @@ public class AggregationFunctionDemo {
 				return rowData._2;
 			}
 		})
-				.window(TumblingProcessingTimeWindows.of(Time.seconds(2)))
+				.window(TumblingProcessingTimeWindows.of(Time.milliseconds(5)))
 //				.timeWindow(Time.seconds(2))
 				.aggregate(new AggregateFunction<Tuple2<Long, String>, Long, Long>() {
 
