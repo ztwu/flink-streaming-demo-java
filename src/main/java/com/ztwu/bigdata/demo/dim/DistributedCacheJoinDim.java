@@ -22,7 +22,7 @@ public class DistributedCacheJoinDim {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 		// 注册缓存文件 如: file:///some/path 或 hdfs://host:port/and/path
-		String cachedFilePath = "./user_info.txt";
+		String cachedFilePath = "data/user_info.txt";
 		String cachedFileName = "user_info";
 		env.registerCachedFile(cachedFilePath, cachedFileName);
 

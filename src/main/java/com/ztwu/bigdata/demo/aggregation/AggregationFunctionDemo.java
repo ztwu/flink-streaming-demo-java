@@ -56,8 +56,8 @@ public class AggregationFunctionDemo {
 //				return rowData._2;
 //			}
 //		})
-				.window(SlidingProcessingTimeWindows.of(Time.seconds(6), Time.seconds(2)))
-//				.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
+//				.window(SlidingProcessingTimeWindows.of(Time.seconds(6), Time.seconds(2)))
+				.window(TumblingProcessingTimeWindows.of(Time.seconds(5)))
 //				.timeWindow(Time.seconds(2))
 				.aggregate(new AggregateFunction<Tuple2<Long, String>, Long, Long>() {
 
