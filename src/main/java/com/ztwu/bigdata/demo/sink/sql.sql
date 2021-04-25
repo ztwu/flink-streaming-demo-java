@@ -1,4 +1,4 @@
-CREATE TABLE student(
+﻿CREATE TABLE student(
   id INT,
   name STRING,
   password STRING,
@@ -19,17 +19,19 @@ CREATE TABLE student(
   'update-mode' = 'append'
 );
 
-CREATE TABLE pvuv_sink (
-    dt VARCHAR,
-    pv BIGINT,
-    uv BIGINT
+CREATE TABLE usertest_sink (
+    name string,
+    age string,
+    sex string,
+    id string
 ) WITH (
     'connector.type' = 'jdbc', -- 使用 jdbc connector
-    'connector.url' = 'jdbc:mysql://localhost:3306/flink-test', -- jdbc url
-    'connector.table' = 'pvuv_sink', -- 表名
+    'connector.url' = 'jdbc:mysql://localhost:3306/test', -- jdbc url
+    'driver'='com.mysql.jdbc.Driver',
+    'connector.table' = 'user', -- 表名
     'connector.username' = 'root', -- 用户名
-    'connector.password' = '123456', -- 密码
-    'connector.write.flush.max-rows' = '1' -- 默认5000条，为了演示改为1条
+    'connector.password' = 'root', -- 密码
+    'connector.write.flush.max-rows' = '100' -- 默认5000条，为了演示改为1条
 )
 
 create table hive_sink_table (
@@ -48,3 +50,21 @@ tblproperties (
  'sink.partition-commit.trigger' = 'process-time',
  'sink.partition-commit.policy.kind' = 'metastore,success-file'
 )
+
+CREATE TABLE `user_mysql_dim` (
+    name string,
+    age string,
+    sex string,
+    id string 
+) with ( 
+  'connector' = 'jdbc', 
+  'url' = 'jdbc:mysql://localhost:3306/test', 
+  'driver'='com.mysql.jdbc.Driver',
+  'table-name' = 'user', 
+  'username' = 'root',
+  'password' = 'root',
+  'lookup.cache.max-rows' = '100', 
+  'lookup.cache.ttl' = '10s',
+  'lookup.max-retries' = '3' 
+); 
+select * from user_mysql;

@@ -27,7 +27,7 @@ public class LookupableTableSource {
 		// Source DDL
 		// Kafka数据: {"userID":"user_1","eventType":"click","eventTime":"2015-01-01 00:00:00"}
 		String sourceDDL = ""
-				+ "create table source_kafka "
+				+ "create table source_kafka3 "
 				+ "( "
 				+ "    userID STRING, "
 				+ "    eventType STRING, "
@@ -35,16 +35,18 @@ public class LookupableTableSource {
 				+ "    proctime AS PROCTIME() "
 				+ ") with ( "
 				+ "    'connector.type' = 'kafka', "
-				+ "    'connector.version' = '0.10', "
-				+ "    'connector.properties.bootstrap.servers' = 'kafka01:9092', "
-				+ "    'connector.properties.zookeeper.connect' = 'kafka01:2181', "
-				+ "    'connector.topic' = 'test_1', "
-				+ "    'connector.properties.group.id' = 'c1_test_1', "
-				+ "    'connector.startup-mode' = 'latest-offset', "
-				+ "    'format.type' = 'json' "
+				+ "    'connector.version' = 'universal', "
+				+ "    'connector.properties.bootstrap.servers' = '192.168.56.101:9092,192.168.56.101:9093,192.168.56.101:9094', "
+				+ "    'connector.properties.zookeeper.servers' = '192.168.56.101:2181', "
+				+ "    'connector.topic' = 'kafkademo3', "
+				+ "    'connector.properties.group.id' = 'c1_test_111', "
+				+ "    'connector.startup-mode' = 'group-offsets', "
+				+ "    'format.type' = 'csv', "
+				+ "    'format.field-delimiter' = ',', "
+				+ "    'format.ignore-parse-errors' = 'false' "
 				+ ")";
-		tableEnv.sqlUpdate(sourceDDL);
-		//tableEnv.toAppendStream(tableEnv.from("source_kafka"), Row.class).print();
+		tableEnv.executeSql(sourceDDL);
+//		tableEnv.executeSql("select * from source_kafka3").print();
 
 		// Dim DDL
 		// Mysql维度数据
@@ -56,32 +58,51 @@ public class LookupableTableSource {
 		// +--------+----------+---------+
 		String dimDDL = ""
 				+ "CREATE TABLE dim_mysql ( "
-				+ "    userID STRING, "
-				+ "    userName STRING, "
-				+ "    userAge INT "
+				+ "    name STRING, "
+				+ "    age STRING, "
+				+ "    sex STRING, "
+				+ "    id STRING "
 				+ ") WITH ( "
 				+ "    'connector.type' = 'jdbc', "
-				+ "    'connector.url' = 'jdbc:mysql://localhost:3306/bigdata', "
-				+ "    'connector.table' = 't_user_info', "
+				+ "    'connector.url' = 'jdbc:mysql://192.168.56.101:3306/test', "
+				+ "    'connector.table' = 'user', "
 				+ "    'connector.driver' = 'com.mysql.jdbc.Driver', "
-				+ "    'connector.username' = '****', "
-				+ "    'connector.password' = '******' "
+				+ "    'connector.username' = 'root', "
+				+ "    'connector.password' = 'root' "
 				+ ")";
-		tableEnv.sqlUpdate(dimDDL);
+		tableEnv.executeSql(dimDDL);
+//		tableEnv.executeSql("select * from dim_mysql").print();
 
-		// Query
-		// Left Join
-		String execSQL = ""
+		String sinkDDL = ""
+				+ "create table sink_kafka3 "
+				+ "( "
+				+ "    userID STRING, "
+				+ "    eventType STRING, "
+				+ "    eventTime STRING, "
+				+ "    name STRING, "
+				+ "    age STRING "
+				+ ") with ( "
+				+ "    'connector.type' = 'kafka', "
+				+ "    'connector.version' = 'universal', "
+				+ "    'connector.properties.bootstrap.servers' = '192.168.56.101:9092,192.168.56.101:9093,192.168.56.101:9094', "
+				+ "    'connector.properties.zookeeper.servers' = '192.168.56.101:2181', "
+				+ "    'connector.topic' = 'kafkademo3sink', "
+				+ "    'format.type' = 'csv', "
+				+ "    'format.field-delimiter' = ',', "
+				+ "    'update-mode' = 'append' "
+				+ ")";
+		tableEnv.executeSql(sinkDDL);
+//
+//		// Query
+//		// Left Join
+		String execSQL = "insert into sink_kafka3 "
 				+ "SELECT "
-				+ "  kafka.*,mysql.userName,mysql.userAge "
+				+ "  kafka.userID,kafka.eventType,kafka.eventTime,mysql.name,mysql.age "
 				+ "FROM "
-				+ "  source_kafka as kafka"
+				+ "  source_kafka3 as kafka"
 				+ "  LEFT JOIN dim_mysql FOR SYSTEM_TIME AS OF kafka.proctime AS mysql "
-				+ "  ON kafka.userID = mysql.userID";
-		Table table = tableEnv.sqlQuery(execSQL);
-		tableEnv.toAppendStream(table, Row.class).print();
-
-		tableEnv.execute(LookupableTableSource.class.getSimpleName());
+				+ "  ON kafka.userID = mysql.id";
+		tableEnv.executeSql(execSQL).print();
 
 	}
 }
