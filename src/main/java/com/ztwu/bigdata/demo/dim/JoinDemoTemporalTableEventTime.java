@@ -36,7 +36,7 @@ public class JoinDemoTemporalTableEventTime {
         List<Tuple3<String, Integer, Long>> list1 = new ArrayList<>();
         list1.add(new Tuple3<>("user1", 1001, 1L));
         list1.add(new Tuple3<>("user1", 1001, 10L));
-        list1.add(new Tuple3<>("user2", 1002, 2L));
+        list1.add(new Tuple3<>("user2", 1002, 5L));
         list1.add(new Tuple3<>("user2", 1002, 15L));
         DataStream<Tuple3<String, Integer, Long>> textStream = env.fromCollection(list1)
                 .assignTimestampsAndWatermarks(
