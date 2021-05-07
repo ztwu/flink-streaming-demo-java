@@ -53,7 +53,7 @@ public class JoinDemoTemporalTableEventTime {
         List<Tuple3<Integer, String, Long>> list2 = new ArrayList<>();
         list2.add(new Tuple3<>(1001, "beijing", 1L));
         list2.add(new Tuple3<>(1001, "beijing2", 10L));
-        list2.add(new Tuple3<>(1002, "shanghai", 1L));
+        list2.add(new Tuple3<>(1002, "shanghai", 10L));
         list2.add(new Tuple3<>(1002, "shanghai2", 5L));
 
         DataStream<Tuple3<Integer, String, Long>> cityStream = env.fromCollection(list2)
