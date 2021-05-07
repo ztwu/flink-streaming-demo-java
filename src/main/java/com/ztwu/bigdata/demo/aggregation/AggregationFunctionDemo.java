@@ -63,6 +63,7 @@ public class AggregationFunctionDemo {
 //				.timeWindow(Time.seconds(2))
 				.sum(0)
 				.print();
+		//ReduceFunction 和 AggregateFunction 都是基于中间状态实现增量计算的窗口函数，
 //				.aggregate(new AggregateFunction<Tuple2<Long, String>, Long, Long>() {
 //
 //					@Override

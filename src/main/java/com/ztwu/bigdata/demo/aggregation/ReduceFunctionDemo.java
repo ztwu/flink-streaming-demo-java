@@ -50,7 +50,9 @@ public class ReduceFunctionDemo {
 			public String getKey(Tuple2<Long, String> rowData) throws Exception {
 				return rowData._2;
 			}
-		}).reduce(new ReduceFunction<Tuple2<Long, String>>() {
+		})
+				//ReduceFunction 和 AggregateFunction 都是基于中间状态实现增量计算的窗口函数，
+				.reduce(new ReduceFunction<Tuple2<Long, String>>() {
 			@Override
 			public Tuple2<Long, String> reduce(Tuple2<Long, String> t, Tuple2<Long, String> t1) throws Exception {
 				return new Tuple2<Long,String>(t._1+t1._1, t._2);
