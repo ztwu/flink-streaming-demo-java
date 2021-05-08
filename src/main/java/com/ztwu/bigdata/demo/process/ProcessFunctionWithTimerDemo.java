@@ -24,12 +24,14 @@ public class ProcessFunctionWithTimerDemo {
 		DataStreamSource<String> lines = env.socketTextStream("feng05", 8888);
 		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 		// 得到watermark，并没有对原始数据进行处理
-		SingleOutputStreamOperator<String> lineWithWaterMark = lines.assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<String>(Time.seconds(0)) {
+		SingleOutputStreamOperator<String> lineWithWaterMark = lines
+				.assignTimestampsAndWatermarks(new BoundedOutOfOrdernessTimestampExtractor<String>(Time.seconds(0)) {
 			@Override
 			public long extractTimestamp(String element) {
 				return Long.parseLong(element.split(",")[0]);
 			}
 		});
+
 		// 处理数据，获取指定字段
 		SingleOutputStreamOperator<Tuple2<String, Integer>> wordAndOne = lineWithWaterMark.map(new MapFunction<String, Tuple2<String, Integer>>() {
 			@Override

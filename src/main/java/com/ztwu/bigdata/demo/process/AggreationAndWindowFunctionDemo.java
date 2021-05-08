@@ -30,9 +30,11 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * 在窗口内增量聚合，效率更高
+ * 元素到达窗口时增量聚合，
+ * 当窗口关闭时对增量聚合的结果用
+ * ProcessWindowFunction再进行全量聚合。
  */
-public class HotGoodsTopNAdv {
+public class AggreationAndWindowFunctionDemo {
 
 	public static void main(String[] args) throws Exception{
 
