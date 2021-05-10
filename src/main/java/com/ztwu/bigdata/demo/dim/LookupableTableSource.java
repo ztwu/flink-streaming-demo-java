@@ -68,9 +68,32 @@ public class LookupableTableSource {
 				+ "    'connector.table' = 'user', "
 				+ "    'connector.driver' = 'com.mysql.jdbc.Driver', "
 				+ "    'connector.username' = 'root', "
-				+ "    'connector.password' = 'root' "
+				+ "    'connector.password' = 'root', "
+				+ "    'connector.lookup.cache.max-rows' = '5000', "
+				+ "    'connector.lookup.cache.ttl' = '10s', "
+				+ "    'connector.lookup.max-retries' = '3' "
 				+ ")";
 		tableEnv.executeSql(dimDDL);
+
+		String dimDDL2 = ""
+				+ "CREATE TABLE dim_mysql2 ( "
+				+ "    name STRING, "
+				+ "    age STRING, "
+				+ "    sex STRING, "
+				+ "    id STRING "
+				+ ") WITH ( "
+				+ "    'connector.type' = 'jdbc', "
+				+ "    'connector.url' = 'jdbc:mysql://192.168.56.101:3306/test', "
+				+ "    'connector.table' = 'user', "
+				+ "    'connector.driver' = 'com.mysql.jdbc.Driver', "
+				+ "    'connector.username' = 'root', "
+				+ "    'connector.password' = 'root', "
+				+ "    'connector.lookup.cache.max-rows' = '5000', "
+				+ "    'connector.lookup.cache.ttl' = '10s', "
+				+ "    'connector.lookup.max-retries' = '3' "
+				+ ")";
+		tableEnv.executeSql(dimDDL2);
+
 //		tableEnv.executeSql("select * from dim_mysql").print();
 
 		String sinkDDL = ""
@@ -86,7 +109,7 @@ public class LookupableTableSource {
 				+ "    'connector.version' = 'universal', "
 				+ "    'connector.properties.bootstrap.servers' = '192.168.56.101:9092,192.168.56.101:9093,192.168.56.101:9094', "
 				+ "    'connector.properties.zookeeper.servers' = '192.168.56.101:2181', "
-				+ "    'connector.topic' = 'kafkademo3sink', "
+				+ "    'connector.topic' = 'kafkademo3sink5', "
 				+ "    'format.type' = 'csv', "
 				+ "    'format.field-delimiter' = ',', "
 				+ "    'update-mode' = 'append' "
@@ -97,11 +120,13 @@ public class LookupableTableSource {
 //		// Left Join
 		String execSQL = "insert into sink_kafka3 "
 				+ "SELECT "
-				+ "  kafka.userID,kafka.eventType,kafka.eventTime,mysql.name,mysql.age "
+				+ "  kafka.userID,kafka.eventType,kafka.eventTime,mysql.name,mysql2.age "
 				+ "FROM "
 				+ "  source_kafka3 as kafka"
 				+ "  LEFT JOIN dim_mysql FOR SYSTEM_TIME AS OF kafka.proctime AS mysql "
-				+ "  ON kafka.userID = mysql.id";
+				+ "  ON kafka.userID = mysql.id"
+				+ "  LEFT JOIN dim_mysql2 FOR SYSTEM_TIME AS OF kafka.proctime AS mysql2 "
+				+ "  ON kafka.userID = mysql2.id";
 		tableEnv.executeSql(execSQL).print();
 
 	}
