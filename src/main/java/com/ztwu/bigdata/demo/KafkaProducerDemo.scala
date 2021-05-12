@@ -33,7 +33,7 @@ object KafkaProducerDemo {
       val dNow = new Date()
       val time = sdf.format(dNow)
 //      {"click_user": "user_1", "click_time": "2016-01-01 00:00:00"}
-      val msg = s"01,click,${time}"
+      val msg = s"04,click,${time}"
 //      val msg = s"{'userID':'user_${i}','eventType':'click','eventTime':'${time}'}"
 
 //      val msg =s"{'click_time': '${time}', 'click_user': 'user_${i}'}"

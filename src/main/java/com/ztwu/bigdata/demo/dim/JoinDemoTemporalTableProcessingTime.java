@@ -69,12 +69,12 @@ public class JoinDemoTemporalTableProcessingTime {
         //转变为Table
 //        textStream.print();
 //        cityStream.print();
-        Table userTable = tableEnv.fromDataStream(textStream, "user_name,city_id,ps.proctime");
         Table cityTable = tableEnv.fromDataStream(cityStream, "city_id,city_name,ps.proctime");
+        Table userTable = tableEnv.fromDataStream(textStream, "user_name,city_id,ps.proctime");
 //        userTable.printSchema();
 //        cityTable.printSchema();
-        tableEnv.createTemporaryView("userTable2", userTable);
         tableEnv.createTemporaryView("cityTable2", cityTable);
+        tableEnv.createTemporaryView("userTable2", userTable);
 
         //定义一个TemporalTableFunction
         TemporalTableFunction dimCity = cityTable.createTemporalTableFunction("ps", "city_id");
@@ -93,7 +93,7 @@ public class JoinDemoTemporalTableProcessingTime {
 
         //打印输出
         Table result = tableEnv
-                .sqlQuery("select u.user_name,u.city_id,d.city_name from userTable2 as u " +
+                .sqlQuery("select u.user_name,u.city_id,d.city_name,u.ps from userTable2 as u " +
                         ", Lateral table (dimCity2(u.ps)) d " +
                         "where u.city_id=d.city_id");
         //打印输出
