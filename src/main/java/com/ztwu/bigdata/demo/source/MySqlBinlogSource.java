@@ -14,7 +14,7 @@ public class MySqlBinlogSource {
       .username("root")
       .password("root")
       .tableList("test.user")
-      .deserializer(new StringDebeziumDeserializationSchema()) // converts SourceRecord to String
+      .deserializer(new MyDeserializationSchemaFunction()) // converts SourceRecord to String
       .build();
 
     StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
