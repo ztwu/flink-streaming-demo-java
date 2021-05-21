@@ -24,7 +24,7 @@ public class ES5SindkDemo {
 
 		List<InetSocketAddress> transportAddresses = new ArrayList<>();
 		transportAddresses.add(new InetSocketAddress(InetAddress.getByName("127.0.0.1"), 9300));
-		transportAddresses.add(new InetSocketAddress(InetAddress.getByName("10.2.3.1"), 9300));
+		transportAddresses.add(new InetSocketAddress(InetAddress.getByName("127.2.3.1"), 9300));
 
 		new ElasticsearchSink<>(config, transportAddresses, new ElasticsearchSinkFunction<String>() {
 			public IndexRequest createIndexRequest(String element) {
