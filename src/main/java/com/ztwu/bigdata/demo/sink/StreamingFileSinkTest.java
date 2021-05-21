@@ -66,7 +66,8 @@ public class StreamingFileSinkTest {
 
 		StreamingFileSink<Tuple2<Long, String>> streamingFileSink = StreamingFileSink
 				/*forRowFormat指定文件的跟目录与文件写入编码方式，这里使用SimpleStringEncoder 以UTF-8字符串编码方式写入文件*/
-				.forRowFormat(new Path("hdfs://192.168.0.101:8020/tmp/hdfsSink"), new SimpleStringEncoder<Tuple2<Long, String>>("UTF-8"))
+				.forRowFormat(new Path("tmp/hdfsSink"), new SimpleStringEncoder<Tuple2<Long, String>>("UTF-8"))
+//				.forRowFormat(new Path("hdfs://192.168.0.101:8020/tmp/hdfsSink"), new SimpleStringEncoder<Tuple2<Long, String>>("UTF-8"))
 				/*这里是采用默认的分桶策略DateTimeBucketAssigner，它基于时间的分配器，每小时产生一个桶，格式如下yyyy-MM-dd--HH*/
 				.withBucketAssigner(new DateTimeBucketAssigner<>())
 				/*设置上面指定的滚动策略*/
