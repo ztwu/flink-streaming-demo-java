@@ -70,7 +70,7 @@ public class StreamingFileSinkTest {
 				.forRowFormat(new Path("tmp/hdfsSink"), new SimpleStringEncoder<Tuple2<Long, String>>("UTF-8"))
 //				.forRowFormat(new Path("hdfs://192.168.0.101:8020/tmp/hdfsSink"), new SimpleStringEncoder<Tuple2<Long, String>>("UTF-8"))
 				/*这里是采用默认的分桶策略DateTimeBucketAssigner，它基于时间的分配器，每小时产生一个桶，格式如下yyyy-MM-dd--HH*/
-				.withBucketAssigner(new DateTimeBucketAssigner<>("'dt='yyyyMMdd", ZoneId.of("Asia/Shanghai")))
+				.withBucketAssigner(new DateTimeBucketAssigner<>("'day='yyyyMMdd/'hour'=HH", ZoneId.of("Asia/Shanghai")))
 				/*设置上面指定的滚动策略*/
 				.withRollingPolicy(rollPolicy)
 				/*桶检查间隔，这里设置为1s*/
