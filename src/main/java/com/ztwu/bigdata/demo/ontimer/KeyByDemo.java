@@ -53,7 +53,7 @@ public class KeyByDemo {
 					}else if(n==2){
 						ctx.collect(System.currentTimeMillis()+","+"ABCDFB123abc");
 					}else if(n==3){
-						ctx.collect(System.currentTimeMillis()+","+"ffffffffffww");
+						ctx.collect(System.currentTimeMillis()+","+"999999999999");
 					}else if(n==0){
 						ctx.collect(System.currentTimeMillis()+","+"ztwuwwwwwwww");
 					}
@@ -80,7 +80,8 @@ public class KeyByDemo {
 				.keyBy(new KeySelector<Tuple2<String, Integer>, String>() {
 					@Override
 					public String getKey(Tuple2<String, Integer> value) throws Exception {
-						return new StringBuffer(value.f0).reverse().toString().substring(0,2);
+						return value.f0;
+//						return new StringBuffer(value.f0).reverse().toString().substring(0,2);
 					}
 				});
 
