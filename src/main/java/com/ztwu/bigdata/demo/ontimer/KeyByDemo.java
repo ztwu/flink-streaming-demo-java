@@ -80,8 +80,8 @@ public class KeyByDemo {
 				.keyBy(new KeySelector<Tuple2<String, Integer>, String>() {
 					@Override
 					public String getKey(Tuple2<String, Integer> value) throws Exception {
-						return value.f0;
-//						return new StringBuffer(value.f0).reverse().toString().substring(0,2);
+//						return value.f0;
+						return new StringBuffer(value.f0).reverse().toString().substring(0,2);
 					}
 				});
 
