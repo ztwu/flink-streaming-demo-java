@@ -25,6 +25,7 @@
         <flink.table.scope>compile</flink.table.scope>
         <flink.connector.scope>compile</flink.connector.scope>
         <flink.format.scope>compile</flink.format.scope>
+        <flink.stateBackend.scope>compile</flink.stateBackend.scope>
         <scala.scope>compile</scala.scope>
         <carbon.version>2.0.1</carbon.version>
         <hadoop.version>2.7.2</hadoop.version>
@@ -288,6 +289,13 @@
                 <version>0.7.45</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-statebackend-rocksdb_${scala.bin.version}</artifactId>
+                <version>${flink.version}</version>
+                <scope>${flink.stateBackend.scope}</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -467,6 +475,11 @@
             <artifactId>RoaringBitmap</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-statebackend-rocksdb_${scala.bin.version}</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
 
 
     </dependencies>
