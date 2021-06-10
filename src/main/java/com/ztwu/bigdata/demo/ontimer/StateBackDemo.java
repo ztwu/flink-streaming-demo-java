@@ -75,6 +75,19 @@ public class StateBackDemo {
 		//        StateBackend stateBackend = new FsStateBackend("file:///flink/checkpoint");
 		bsEnv.setStateBackend(stateBackend);
 		bsEnv.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+
+		//3. 设置重启策略
+//        如果没有启用 checkpointing，则使用无重启 (no restart) 策略。
+//        如果启用了 checkpointing，但没有配置重启策略，则使用固定间隔 (fixed-delay) 策略，其中 Integer.MAX_VALUE 参数是尝试重启次数
+		//3.1 固定间隔重启：最多重启五次，重启间隔2000毫秒
+//        bsEnv.setRestartStrategy(RestartStrategies.fixedDelayRestart(5,2000));
+		//3.2 失败率：failureRate是每个测量时间间隔最大失败次数
+		//第二个参数failureInterval失败率测量的时间间隔;
+		// 第三个参数delayInterval是两次连续重启尝试的时间间隔
+//        bsEnv.setRestartStrategy(RestartStrategies.failureRateRestart(5,
+//                Time.of(5, TimeUnit.MINUTES),Time.of(10, TimeUnit.SECONDS)));
+		//3.3 无重启
+//        bsEnv.setRestartStrategy(RestartStrategies.noRestart());
 		bsEnv.setRestartStrategy(RestartStrategies.fallBackRestart());
 
 		// 确保检查点之间有至少500 ms的间隔【checkpoint最小间隔】
